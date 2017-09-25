@@ -11,6 +11,6 @@ public class ObservableTransform extends Pipeable {
 
     @Override
     public void onData(String data) {
-        emitData(this.transformer.apply(data));
+        emitData(transformer.apply(data));
     }
 }

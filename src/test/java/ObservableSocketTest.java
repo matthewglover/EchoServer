@@ -3,6 +3,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 import static org.junit.Assert.*;
@@ -18,7 +19,7 @@ public class ObservableSocketTest {
     private TestObserver testObserver;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws IOException {
         testData = "Test input!";
         testSocket = mock(Socket.class);
         mockOutputStream = new ByteArrayOutputStream();
@@ -30,14 +31,14 @@ public class ObservableSocketTest {
     }
 
     @Test
-    public void writesInputToSocket() {
+    public void writesInputToSocket() throws IOException {
         ObservableSocket mySocket = new ObservableSocket(testSocket);
         mySocket.onData(testData);
         assertEquals(testData, mockOutputStream.toString().trim());
     }
 
     @Test
-    public void onDataWaitsForThenEmitsDataReceivedOnSocketInputStream() {
+    public void onDataWaitsForThenEmitsDataReceivedOnSocketInputStream() throws Exception {
         ObservableSocket mySocket = new ObservableSocket(testSocket);
         mySocket.addObserver(testObserver);
         mySocket.onData(testData);
@@ -45,7 +46,7 @@ public class ObservableSocketTest {
     }
 
     @Test
-    public void implementsPipeable() {
+    public void implementsPipeable() throws IOException {
         Pipeable mySocket = new ObservableSocket(testSocket);
         mySocket.pipeTo(testObserver);
         mySocket.onData(testData);

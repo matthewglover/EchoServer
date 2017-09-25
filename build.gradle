@@ -15,4 +15,13 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core', version: '2.7.22'
 }
 
+mainClassName = 'MyEchoServer'
 
+task execute(type:JavaExec) {
+    standardInput = System.in
+    main = mainClass
+    classpath = sourceSets.main.runtimeClasspath
+    if (project.hasProperty("appArgs")) {
+        args Eval.me(appArgs)
+    }
+}

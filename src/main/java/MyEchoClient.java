@@ -13,12 +13,8 @@ public class MyEchoClient {
         int portNumber = Integer.parseInt(args[1]);
 
         try (Socket socket = new Socket(hostName, portNumber)) {
-            ObservableInputStream observableInputStream = new ObservableInputStream(System.in);
-            ObservableToOutputStream observableToOutputStream = new ObservableToOutputStream(System.out);
-            ObservableSocket observableSocket = new ObservableSocket(socket);
-            ObservableTransform observableTransform = new ObservableTransform(str -> "Echo: " + str);
-            observableInputStream.pipeTo(observableSocket).pipeTo(observableTransform).pipeTo(observableToOutputStream);
-            observableInputStream.read();
+            EchoClient echoClient = new EchoClient(socket, System.in, System.out);
+            echoClient.start();
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
