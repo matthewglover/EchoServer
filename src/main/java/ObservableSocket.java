@@ -24,8 +24,7 @@ public class ObservableSocket extends Pipeable {
     private void listenForSocketInput() {
         try {
             String data = realSocketIn.readLine();
-            setChanged();
-            notifyObservers(data);
+            emitData(data);
         } catch(Exception e) {
             throw new RuntimeException(e.getMessage());
         }
