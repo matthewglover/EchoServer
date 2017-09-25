@@ -12,11 +12,19 @@ public class ObservableInputStream extends Pipeable {
     }
 
     public void read() {
-        String data;
-        try {
-            while ((data = streamReader.readLine()) != null) {
+        while (true) {
+            String data = readLine();
+            if (data == null) {
+                break;
+            } else {
                 emitData(data);
             }
+        }
+    }
+
+    private String readLine() {
+        try {
+            return streamReader.readLine();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
