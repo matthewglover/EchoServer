@@ -1,32 +1,20 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.net.Socket;
 
 public class ObservableSocket extends Pipeable {
-    private final PrintWriter realSocketOut;
-    private final BufferedReader realSocketIn;
 
-    public ObservableSocket(Socket realSocket) {
-        try {
-            realSocketOut = new PrintWriter(realSocket.getOutputStream(), true);
-            realSocketIn = new BufferedReader(new InputStreamReader(realSocket.getInputStream()));
-        } catch(Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    private final SocketWrapper socketWrapper;
+
+    public ObservableSocket(Socket realSocket) throws IOException {
+        this.socketWrapper = new SocketWrapper(realSocket);
     }
-
-    public void onData(String data) {
-        realSocketOut.println(data);
+    public void onData(String data) throws IOException {
+        socketWrapper.writeToSocket(data);
         listenForSocketInput();
     }
 
-    private void listenForSocketInput() {
-        try {
-            String data = realSocketIn.readLine();
-            emitData(data);
-        } catch(Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    private void listenForSocketInput() throws IOException {
+        String data = socketWrapper.readFromSocket();
+        emitData(data);
     }
 }
