@@ -14,9 +14,8 @@ public class MyEchoServer {
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber);
         ) {
-            ObservableServerSocket observableServerSocket = new ObservableServerSocket(serverSocket);
-            observableServerSocket.pipeTo(observableServerSocket);
-            observableServerSocket.readInput();
+            EchoServer echoServer = new EchoServer(serverSocket);
+            echoServer.start();
         } catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port " +
                     portNumber + " or listening for a connection");
